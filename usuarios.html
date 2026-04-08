@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Usuarios</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+  <style>
+    .usuarios-hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; margin-bottom: 22px; }
+    .usuarios-panel { border-radius: 28px; background: #f7f4f7; border: 1px solid rgba(106, 52, 126, 0.14); padding: 22px; }
+    .usuarios-panel h2, .usuarios-panel h3 { margin: 0 0 12px; color: #5b2d72; }
+    .usuarios-panel p { margin: 0; color: #6a347e; line-height: 1.6; }
+    .usuarios-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .usuarios-kpi { border-radius: 24px; padding: 18px 20px; background: #f7f4f7; border: 1px solid rgba(106, 52, 126, 0.14); }
+    .usuarios-kpi strong { display: block; margin-bottom: 8px; color: #6a347e; font-size: 0.96rem; }
+    .usuarios-kpi span { display: block; color: #5b2d72; font-size: 2rem; font-weight: 700; }
+    .usuarios-kpi small { display: block; margin-top: 8px; color: #7a4a90; font-size: 0.9rem; }
+    .usuarios-toolbar { display: grid; grid-template-columns: minmax(240px, 1.3fr) minmax(180px, 0.8fr); gap: 12px; margin-bottom: 18px; }
+    .usuarios-toolbar input, .usuarios-toolbar select { height: 44px; border-radius: 999px; border: 1px solid rgba(106, 52, 126, 0.24); padding: 0 14px; font-size: 0.95rem; background: #f7f4f7; color: #5b2d72; }
+    .usuarios-lista { display: grid; gap: 12px; }
+    .usuarios-card { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(110px, 0.55fr) minmax(140px, 0.6fr) auto; gap: 12px; align-items: center; padding: 16px 18px; border-radius: 18px; background: #ece7ee; color: #5b2d72; }
+    .usuarios-card strong { display: block; margin-bottom: 4px; }
+    .usuarios-card span { display: block; color: #7a4a90; font-size: 0.92rem; word-break: break-word; }
+    .usuarios-card select { height: 40px; border-radius: 999px; border: 1px solid rgba(106, 52, 126, 0.24); padding: 0 12px; background: #f7f4f7; color: #5b2d72; }
+    .usuarios-card button { min-width: 138px; border: none; border-radius: 999px; padding: 11px 16px; cursor: pointer; font-weight: 700; background: #5b2d72; color: #fff; }
+    .usuarios-card button.secundario { background: #ddd6e3; color: #5b2d72; }
+    .usuarios-chip { display: inline-flex; align-items: center; justify-content: center; min-width: 92px; padding: 8px 12px; border-radius: 999px; font-size: 0.86rem; font-weight: 700; }
+    .usuarios-chip.ativo { background: rgba(34, 197, 94, 0.16); color: #166534; }
+    .usuarios-chip.inativo { background: rgba(239, 68, 68, 0.16); color: #991b1b; }
+    .usuarios-empty { padding: 18px; border-radius: 18px; background: #ece7ee; color: #7a4a90; text-align: center; }
+    .usuarios-nota { margin-top: 16px; padding: 14px 16px; border-radius: 18px; background: #ece7ee; color: #6a347e; }
+    .usuarios-nota strong { display: block; margin-bottom: 6px; color: #5b2d72; }
+    @media (max-width: 1100px) { .usuarios-hero { grid-template-columns: 1fr; } }
+    @media (max-width: 980px) { .usuarios-toolbar, .usuarios-card { grid-template-columns: 1fr; } .usuarios-card button { width: 100%; } }
+  </style>
+</head>
+<body class="layout-documento">
+  <div class="doc-shell">
+    <aside id="sidePanelUsuarios" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab2.html'">Numeros Usados</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+      <button class="doc-sidebar-link active" type="button">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button id="btnSairUsuarios" class="doc-sidebar-link" type="button">Sair</button>
+        <div id="docUserUsuarios" class="doc-user-chip"></div>
+      </div>
+    </aside>
+
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleUsuarios" class="doc-menu-btn" type="button" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+        <div class="doc-title-wrap"><h1>Usuarios</h1></div>
+        <div class="doc-logo-wrap theme-logo-wrap"><img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light"><img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark"></div>
+      </header>
+
+      <section class="usuarios-hero">
+        <div class="usuarios-panel">
+          <h2>Gestao de Usuarios</h2>
+          <p>Esta pagina concentra a administracao de acessos. Aqui o admin pode revisar perfis, bloquear acessos e manter a operacao separada por area sem misturar isso com o painel da diretoria.</p>
+        </div>
+        <div class="usuarios-panel">
+          <h3>Regra de acesso</h3>
+          <p>Somente o admin entra nesta area. Os demais perfis continuam limitados aos modulos deles: operador de numeros cuida da base operacional, financeiro cuida das rotinas financeiras e diretoria acompanha a visao executiva.</p>
+        </div>
+      </section>
+
+      <section class="usuarios-kpis">
+        <div class="usuarios-kpi"><strong>Total de usuarios</strong><span id="usuariosTotal">0</span><small id="usuariosResumoPerfis">Sem dados</small></div>
+        <div class="usuarios-kpi"><strong>Ativos</strong><span id="usuariosAtivos">0</span><small>Com acesso liberado</small></div>
+        <div class="usuarios-kpi"><strong>Inativos</strong><span id="usuariosInativos">0</span><small>Acesso bloqueado</small></div>
+      </section>
+
+      <section class="usuarios-panel">
+        <div class="usuarios-toolbar">
+          <input id="filtroBuscaUsuarios" type="text" placeholder="Buscar por nome, e-mail ou perfil...">
+          <select id="filtroStatusUsuarios">
+            <option value="">Todos os status</option>
+            <option value="ativo">Ativos</option>
+            <option value="inativo">Inativos</option>
+          </select>
+        </div>
+        <div id="usuariosLista" class="usuarios-lista"></div>
+        <div class="usuarios-nota">
+          <strong>Criar novo acesso</strong>
+          <span>O usuario deve ser criado primeiro no Supabase Authentication. Para o nivel de operador de numeros, os dois usuarios previstos sao Fabricio e Priscila.</span>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="./js/supabase.js"></script>
+  <script src="./js/app-utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/usuarios.js"></script>
+  <script src="./js/dark-mode.js"></script>
+</body>
+</html>

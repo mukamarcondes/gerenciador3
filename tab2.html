@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Numeros Utilizados</title>
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/tab2.css">
+<link rel="stylesheet" href="./css/dark-mode.css">
+</head>
+<body class="layout-documento">
+
+<div class="doc-shell">
+  <aside id="sidePanelUsados" class="doc-sidebar hidden">
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+    <button class="doc-sidebar-link active" type="button">Numeros Usados</button>
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+    <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+    <div class="doc-sidebar-footer">
+      <button id="btnSairUsados" class="doc-sidebar-link" type="button">Sair</button>
+      <div id="docUserUsados" class="doc-user-chip"></div>
+    </div>
+  </aside>
+
+  <div class="doc-main">
+    <header class="doc-topbar">
+      <button id="menuToggleUsados" class="doc-menu-btn" type="button" aria-label="Abrir menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="doc-title-wrap">
+        <h1>Numeros Usados</h1>
+      </div>
+
+      <div class="doc-logo-wrap theme-logo-wrap">
+        <img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light">
+        <img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark">
+      </div>
+    </header>
+
+    <section class="doc-stats-row">
+      <div class="doc-stat-card">
+        <span id="countAtivado">0</span>
+        <p>Ativados</p>
+      </div>
+
+      <div class="doc-stat-card">
+        <span id="countDesativado">0</span>
+        <p>Desativados</p>
+      </div>
+    </section>
+
+    <section class="doc-toolbar">
+      <button class="doc-primary-btn" type="button" onclick="window.location.href='tab.html'">Voltar</button>
+
+      <select id="operadoraFiltroVisual" class="doc-filter-select">
+        <option value="todas">Selecione a operadora</option>
+        <option value="TIP">TIP</option>
+        <option value="Algar">Algar</option>
+        <option value="Conectel">Conectel</option>
+      </select>
+
+      <div class="doc-search-wrap">
+        <input id="pesquisaUsados" class="doc-search-input" type="text" placeholder="Pesquisar..."/>
+      </div>
+
+      <div class="doc-actions-wrap">
+        <button id="acoesToggleUsados" class="doc-actions-btn" type="button" aria-label="Mais acoes">⋮</button>
+        <div id="acoesMenuUsados" class="doc-actions-menu hidden">
+          <button id="exportarExcel" class="doc-actions-item" type="button">Exportar CSV</button>
+          <label class="doc-actions-item" for="importarPlanilha">Importar</label>
+          <button id="btnExcluirTodosUsados" class="doc-actions-item danger" type="button">Excluir Todos</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="filtros-operadora hidden">
+      <button class="operadora-btn" data-op="todas">Todas</button>
+      <button class="operadora-btn" data-op="TIP">TIP</button>
+      <button class="operadora-btn" data-op="Algar">Algar</button>
+      <button class="operadora-btn" data-op="Conectel">Conectel</button>
+    </div>
+
+    <input type="file" id="importarPlanilha" accept=".csv" hidden>
+
+    <span id="nomeArquivo" class="doc-file-name"></span>
+
+<main class="doc-content">
+
+<div id="bulkBarUsados" class="bulk-bar hidden">
+  <span id="bulkInfoUsados">0 selecionados</span>
+  <select id="bulkOperadoraUsados">
+    <option value="">Alterar operadora</option>
+    <option value="TIP">TIP</option>
+    <option value="Algar">Algar</option>
+    <option value="Conectel">Conectel</option>
+  </select>
+  <select id="bulkStatusUsados">
+    <option value="">Alterar status</option>
+    <option value="ativado">Ativado</option>
+    <option value="desativado">Desativado</option>
+  </select>
+  <button id="btnAplicarEdicaoUsados" class="acao-livre-btn"><span>Aplicar</span></button>
+  <button id="btnExcluirSelecionadosUsados" class="acao-livre-btn"><span>Excluir Selecionados</span></button>
+  <button id="btnLimparSelecaoUsados" class="acao-livre-btn"><span>Limpar Selecao</span></button>
+</div>
+
+<table class="doc-table usados-table">
+<thead>
+<tr>
+<th><input type="checkbox" id="selecionarTodosUsados"></th>
+<th>ID</th>
+<th class="ordenar" data-col="ddd" style="cursor: pointer;">DDD</th>
+<th>Cidade</th>
+<th class="ordenar" data-col="operadora" style="cursor: pointer;">Operadora Parceira</th>
+<th class="ordenar" data-col="number" style="cursor: pointer;">Numero</th>
+<th class="ordenar" data-col="dataAlteracao" style="cursor: pointer;">Ultima Alteracao</th>
+<th>Responsavel</th>
+<th>Empresa</th>
+<th>Status</th>
+<th>Observacao</th>
+<th>Historico</th>
+<th>Excluir</th>
+</tr>
+</thead>
+<tbody id="usadosTable"></tbody>
+</table>
+
+</main>
+
+<div class="paginacao">
+<button id="prevPage" class="pro">Anterior</button>
+<span id="paginaInfo"></span>
+<button id="nextPage" class="pro">Proxima</button>
+</div>
+
+  </div>
+</div>
+
+<div id="modalVisualizarObservacao" class="hidden">
+  <div class="modal-content">
+    <h2>Observacao</h2>
+    <div id="modoVisualizacao" style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 15px 0; min-height: 100px; max-height: 300px; overflow-y: auto;">
+      <p id="textoObservacao" style="margin: 0; white-space: pre-wrap; word-wrap: break-word;"></p>
+    </div>
+    <div id="modoEdicao" style="display: none; margin: 15px 0;">
+      <textarea id="observacaoEditar" class="input-field" style="min-height: 100px; padding: 10px; font-family: Arial, sans-serif; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+    </div>
+    <div class="modal-buttons">
+      <button type="button" id="btnFecharVisualizacao" class="btn-12">
+        <span>Fechar</span>
+      </button>
+      <button type="button" id="btnEditarObservacao" class="btn-12" style="display: none;">
+        <span>Editar</span>
+      </button>
+      <button type="button" id="btnSalvarObservacao" class="btn-12" style="display: none;">
+        <span>Salvar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="modalObservacao" class="hidden">
+  <div class="modal-content">
+    <h2>Motivo da Desativacao</h2>
+    <form id="formObservacao">
+      <div class="input-container">
+        <textarea id="observacao" class="input-field" placeholder="Digite o motivo da desativacao..." style="min-height: 100px; padding: 10px; font-family: Arial, sans-serif;" required></textarea>
+        <label class="input-label">Observacao</label>
+        <span class="input-highlight"></span>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="btnFecharObservacao" class="btn-12">
+          <span>Cancelar</span>
+        </button>
+        <button type="submit" class="btn-12">
+          <span>Confirmar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="modalHistoricoUsado" class="hidden">
+  <div class="modal-content">
+    <h2>Historico do Numero</h2>
+    <div id="historicoUsadoLista" class="history-list"></div>
+    <div class="modal-buttons">
+      <button type="button" id="btnFecharHistoricoUsado" class="btn-12">
+        <span>Fechar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="./js/supabase.js"></script>
+<script src="./js/app-utils.js"></script>
+<script src="./js/auth.js"></script>
+<script src="./js/tab2.js"></script>
+<script src="./js/dark-mode.js"></script>
+</body>
+</html>

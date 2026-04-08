@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>DDR</title>
+
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+
+</head>
+
+<body class="layout-documento">
+
+  <div class="doc-shell">
+    <aside id="sidePanelLivres" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+      <button class="doc-sidebar-link active" type="button">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" id="btnUsados">Numeros Usados</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button class="doc-sidebar-link" type="button" id="btnSair">Sair</button>
+        <div id="docUserLivres" class="doc-user-chip"></div>
+      </div>
+    </aside>
+
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleLivres" class="doc-menu-btn" type="button" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="doc-title-wrap">
+          <h1>Numeros Disponiveis</h1>
+        </div>
+
+        <div class="doc-logo-wrap theme-logo-wrap">
+          <img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light">
+          <img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark">
+        </div>
+      </header>
+
+      <section class="doc-stats-row">
+        <div class="doc-stat-card">
+          <span id="countLivre">0</span>
+          <p>Livres</p>
+        </div>
+
+        <div class="doc-stat-card">
+          <span id="countPendente">0</span>
+          <p>Reservados</p>
+        </div>
+
+        <div class="doc-stat-card">
+          <span id="countUsado">0</span>
+          <p>Ocupados</p>
+        </div>
+      </section>
+
+      <section class="notificacoes-wrap">
+        <button id="btnNotificacoes" class="notificacoes-btn" type="button">
+          <span class="notificacoes-icone">Alertas</span>
+          <span id="contadorNotificacoes" class="notificacoes-count">0</span>
+        </button>
+        <div id="painelNotificacoes" class="notificacoes-painel hidden"></div>
+      </section>
+
+      <section class="doc-toolbar">
+        <button class="doc-primary-btn" id="btnNovo" type="button">Novo</button>
+
+        <select id="statusFiltroVisual" class="doc-filter-select">
+          <option value="todos">Selecione o status</option>
+          <option value="livre">Livres</option>
+          <option value="reservado">Reservados</option>
+          <option value="ocupado">Ocupados</option>
+        </select>
+
+        <div class="doc-search-wrap">
+          <input id="pesquisar" class="doc-search-input" type="text" placeholder="Pesquisar...">
+        </div>
+
+        <div class="doc-actions-wrap">
+          <button id="acoesToggleLivres" class="doc-actions-btn" type="button" aria-label="Mais acoes">⋮</button>
+          <div id="acoesMenuLivres" class="doc-actions-menu hidden">
+            <button class="doc-actions-item" id="btnImportarLivres" type="button">Importar</button>
+            <button class="doc-actions-item" id="btnExportarLivres" type="button">Exportar</button>
+            <button class="doc-actions-item danger" id="btnExcluirTodosLivres" type="button">Excluir Todos</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="consulta-ia-card">
+        <div class="consulta-ia-head">
+          <div>
+            <strong>Consulta inteligente</strong>
+            <p>Digite em linguagem natural para puxar informacoes da base.</p>
+          </div>
+        </div>
+        <div class="consulta-ia-form">
+          <input id="consultaInteligente" class="consulta-ia-input" type="text" placeholder="Ex.: quais sao os numeros com maior tempo parado no reservado?">
+          <button id="btnExecutarConsulta" class="consulta-ia-btn" type="button">Consultar</button>
+        </div>
+        <div class="consulta-ia-sugestoes">
+          <button class="consulta-sugestao" type="button" data-query="Quais sao os numeros reservados ha mais tempo?">Reservados ha mais tempo</button>
+          <button class="consulta-sugestao" type="button" data-query="Quantos numeros estao reservados?">Total reservados</button>
+          <button class="consulta-sugestao" type="button" data-query="Mostrar resumo por operadora">Resumo por operadora</button>
+          <button class="consulta-sugestao" type="button" data-query="Mostrar resumo por cidade">Resumo por cidade</button>
+        </div>
+        <div id="consultaHistorico" class="consulta-ia-historico hidden"></div>
+        <div id="consultaResultado" class="consulta-ia-resultado hidden"></div>
+      </section>
+
+      <input id="importarLivres" type="file" accept=".csv" hidden>
+
+      <div class="filtros filtros-legado hidden">
+        <button class="filtro-btn" data-status="todos">Todos</button>
+        <button class="filtro-btn" data-status="livre">Livre</button>
+        <button class="filtro-btn" data-status="reservado">Reservado</button>
+        <button class="filtro-btn" data-status="ocupado">Ocupado</button>
+      </div>
+
+      <main class="doc-content">
+
+    <div id="bulkBarLivres" class="bulk-bar hidden">
+      <span id="bulkInfoLivres">0 selecionados</span>
+      <select id="bulkStatusLivres">
+        <option value="">Alterar status</option>
+        <option value="livre">Livre</option>
+        <option value="reservado">Reservado</option>
+        <option value="ocupado">Ocupado</option>
+      </select>
+      <button id="btnAplicarStatusLivres" class="acao-livre-btn"><span>Aplicar</span></button>
+      <button id="btnExcluirSelecionadosLivres" class="acao-livre-btn"><span>Excluir Selecionados</span></button>
+      <button id="btnLimparSelecaoLivres" class="acao-livre-btn"><span>Limpar Selecao</span></button>
+    </div>
+
+    <table class="doc-table">
+
+      <thead>
+
+        <tr>
+          <th><input type="checkbox" id="selecionarTodosLivres"></th>
+          <th>Id</th>
+          <th class="ordenar" data-col="ddd" style="cursor: pointer;">DDD</th>
+          <th>Cidade</th>
+          <th class="ordenar" data-col="operadora" style="cursor: pointer;">Operadora Parceira</th>
+          <th class="ordenar" data-col="number" style="cursor: pointer;">Numero</th>
+          <th class="ordenar" data-col="dataAlteracao" style="cursor: pointer;">Ultima Alteracao</th>
+          <th>Status</th>
+          <th>Observacao</th>
+          <th>Historico</th>
+          <th>Excluir</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="empresasTable"></tbody>
+
+    </table>
+
+  </main>
+
+<div class="paginacao">
+  <div class="paginacao2">
+  <button id="prevPage" class="pro">Anterior</button>
+
+  <span id="paginaInfo"></span>
+
+  <button id="nextPage" class="pro">Proxima</button>
+</div>
+</div>
+
+    </div>
+  </div>
+
+  <div id="modal" class="hidden">
+
+  <div class="modal-content">
+
+    <button id="btnFechar" class="btn-12">
+      <span>Voltar</span>
+    </button>
+
+    <h2>Cadastrar Numero</h2>
+
+    <form id="empresaForm">
+
+      <div class="input-container">
+        <input id="ddd" class="input-field" required>
+        <label class="input-label">DDD</label>
+        <span class="input-highlight"></span>
+      </div>
+
+      <div class="input-container">
+        <input id="cidade" class="input-field" required>
+        <label class="input-label">Cidade</label>
+        <span class="input-highlight"></span>
+      </div>
+
+      <div class="input-container">
+        <select id="operadora" class="input-field" required>
+          <option value="" disabled selected></option>
+          <option value="TIP">TIP</option>
+          <option value="Algar">Algar</option>
+          <option value="Conectel">Conectel</option>
+        </select>
+        <label class="input-label">Operadora</label>
+        <span class="input-highlight"></span>
+      </div>
+
+      <div class="input-container">
+        <input id="number" class="input-field" required>
+        <label class="input-label">Numero</label>
+        <span class="input-highlight"></span>
+      </div>
+
+      <div class="input-container">
+        <select id="status" class="input-field" required>
+          <option value="livre">Livre</option>
+          <option value="reservado">Reservado</option>
+        </select>
+        <label class="input-label">Status</label>
+        <span class="input-highlight"></span>
+      </div>
+
+      <div class="input-container">
+        <textarea id="observacaoLivre" class="input-field" placeholder="Observacao opcional"></textarea>
+        <label class="input-label">Observacao</label>
+        <span class="input-highlight"></span>
+      </div>
+
+      <button type="submit" class="btn-12">
+        <span>Salvar</span>
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+  <div id="modalUsado" class="hidden">
+
+<div class="modal-content">
+
+<h2>Informacoes do Numero</h2>
+
+<form id="formUsado">
+
+<div class="input-container ">
+<select id="responsavel" required>
+<option value="">Selecione o responsavel</option>
+<option value="Fabricio">Fabricio</option>
+<option value="Priscila">Priscila</option>
+</select>
+</div>
+
+<div class="input-container">
+<input id="empresaUsado" class="input-field" required>
+<label class="input-label">Empresa</label>
+<span class="input-highlight"></span>
+</div>
+
+<div class="modal-buttons">
+
+<button type="button" id="btnFecharUsado" class="btn-12">
+<span>Fechar</span>
+</button>
+
+<button type="submit" class="btn-12">
+<span>Salvar</span>
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<div id="modalObservacaoLivre" class="hidden">
+  <div class="modal-content">
+    <h2>Observacao do Numero</h2>
+    <form id="formObservacaoLivre">
+      <div class="input-container">
+        <textarea id="observacaoLivreEditar" class="input-field" placeholder="Digite a observacao..." required></textarea>
+        <label class="input-label">Observacao</label>
+        <span class="input-highlight"></span>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="btnFecharObservacaoLivre" class="btn-12">
+          <span>Cancelar</span>
+        </button>
+        <button type="submit" class="btn-12">
+          <span>Salvar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="modalHistoricoLivre" class="hidden">
+  <div class="modal-content">
+    <h2>Historico do Numero</h2>
+    <div id="historicoLivreLista" class="history-list"></div>
+    <div class="modal-buttons">
+      <button type="button" id="btnFecharHistoricoLivre" class="btn-12">
+        <span>Fechar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="./js/supabase.js"></script>
+<script src="./js/app-utils.js"></script>
+<script src="./js/auth.js"></script>
+<script src="./js/tab.js"></script>
+<script src="./js/dark-mode.js"></script>
+
+</body>
+
+</html>

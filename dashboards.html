@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Dashboards</title>
+
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="./js/report-pdf.js"></script>
+
+  <style>
+    .graficos-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2em;
+      padding: 2em 1em;
+    }
+
+    .grafico-card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 1.5em;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    .grafico-card h3 {
+      margin-top: 0;
+      color: #333;
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
+    .grafico-wrapper {
+      position: relative;
+      height: 300px;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.4em;
+      padding: 0 0 1.4em;
+      margin-bottom: 1.4em;
+    }
+
+    .stat-card {
+      min-height: 114px;
+      padding: 1.3em 1.2em;
+      border-radius: 28px;
+      text-align: center;
+      border: 2px solid #6a347e;
+      background: #f7f4f7;
+      color: #5b2d72;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: none;
+    }
+
+    .stat-value {
+      font-size: 2.35em;
+      font-weight: bold;
+      margin-bottom: 0.2em;
+    }
+
+    .stat-label {
+      font-size: 1.02em;
+      opacity: 1;
+    }
+
+    .dashboard-filtros {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 4px 0 24px;
+      padding: 16px;
+      border-radius: 24px;
+      background: #ece7ee;
+    }
+
+    .dashboard-filtros input,
+    .dashboard-filtros select,
+    .dashboard-filtros button {
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(106, 52, 126, 0.24);
+      padding: 0 14px;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+
+    .dashboard-filtros input,
+    .dashboard-filtros select {
+      background: #f7f4f7;
+      color: #5b2d72;
+    }
+
+    .dashboard-filtros button {
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .dashboard-filtros .btn-aplicar {
+      background: #5b2d72;
+      color: #fff;
+    }
+
+    .dashboard-filtros .btn-limpar {
+      background: #ddd6e3;
+      color: #5b2d72;
+    }
+
+    .dashboard-filtros .btn-relatorio {
+      background: #5b2d72;
+      color: #fff;
+    }
+
+    .dashboard-filtros .btn-csv {
+      background: #0f766e;
+      color: #fff;
+    }
+
+    .dashboard-filtros-acoes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(180px, 1fr));
+      gap: 12px;
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: min(100%, 520px);
+    }
+
+    .dashboard-resumo-filtros {
+      margin: -8px 0 18px;
+      color: #6a347e;
+      font-size: 0.95rem;
+      min-height: 22px;
+    }
+
+    .dashboard-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 18px;
+    }
+
+    .dashboard-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #4338ca;
+      font-size: 0.9rem;
+    }
+
+    .dashboard-chip button {
+      border: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      height: auto;
+    }
+
+    .dashboard-loading {
+      display: none;
+      margin: 0 0 18px;
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+
+    .dashboard-loading.show {
+      display: block;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .grafico-card {
+        background: #2a2a2a;
+        border-color: #444;
+      }
+
+      .grafico-card h3 {
+        color: #e0e0e0;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard-filtros {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+
+      .dashboard-filtros-acoes {
+        grid-column: span 2;
+      }
+      .grafico-wrapper {
+        height: 260px;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .stats-container,
+      .graficos-container {
+        gap: 1rem;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .stat-card {
+        min-height: 96px;
+        border-radius: 22px;
+      }
+    }
+  </style>
+
+</head>
+
+<body class="layout-documento">
+
+  <div class="doc-shell">
+    <aside id="sidePanelDashboard" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab2.html'">Numeros Usados</button>
+      <button class="doc-sidebar-link active" type="button">Dashboard</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button id="btnSairDashboard" class="doc-sidebar-link" type="button">Sair</button>
+        <div id="docUserDashboard" class="doc-user-chip"></div>
+      </div>
+    </aside>
+
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleDashboard" class="doc-menu-btn" type="button" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="doc-title-wrap">
+          <h1>Dashboard</h1>
+        </div>
+
+        <div class="doc-logo-wrap theme-logo-wrap">
+          <img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light">
+          <img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark">
+        </div>
+      </header>
+
+  <main>
+    <section class="dashboard-filtros">
+      <select id="filtroOperadora">
+        <option value="">Todas as operadoras</option>
+      </select>
+      <select id="filtroCidade">
+        <option value="">Todas as cidades</option>
+      </select>
+      <select id="filtroResponsavel">
+        <option value="">Todos os responsáveis</option>
+      </select>
+      <select id="filtroEmpresa">
+        <option value="">Todas as empresas</option>
+      </select>
+      <select id="filtroPeriodo">
+        <option value="">Todo o período</option>
+        <option value="hoje">Alterados hoje</option>
+        <option value="7">Últimos 7 dias</option>
+        <option value="30">Últimos 30 dias</option>
+        <option value="90">Últimos 90 dias</option>
+      </select>
+      <input id="filtroBusca" type="text" placeholder="Buscar número, cidade, empresa...">
+      <div class="dashboard-filtros-acoes">
+        <button id="btnAplicarFiltrosDashboard" class="btn-aplicar" type="button">Aplicar filtros</button>
+        <button id="btnLimparFiltrosDashboard" class="btn-limpar" type="button">Limpar</button>
+        <button id="btnCsvDashboard" class="btn-csv" type="button">Exportar CSV</button>
+        <button id="btnRelatorioDashboard" class="btn-relatorio" type="button">Exportar relatório</button>
+      </div>
+    </section>
+
+    <div id="loadingDashboard" class="dashboard-loading">Carregando indicadores do dashboard...</div>
+    <div id="resumoFiltrosDashboard" class="dashboard-resumo-filtros"></div>
+    <div id="chipsFiltrosDashboard" class="dashboard-chip-list"></div>
+
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-value" id="countLivre">0</div>
+        <div class="stat-label">Números Livres</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="countReservado">0</div>
+        <div class="stat-label">Números Reservados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="countOcupado">0</div>
+        <div class="stat-label">Números Ocupados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="countTotal">0</div>
+        <div class="stat-label">Total de Números</div>
+      </div>
+    </div>
+
+    <div class="graficos-container">
+      <div class="grafico-card">
+        <h3>Distribuição de Status</h3>
+        <div class="grafico-wrapper">
+          <canvas id="graficoStatus"></canvas>
+        </div>
+      </div>
+
+      <div class="grafico-card">
+        <h3>Números por Operadora</h3>
+        <div class="grafico-wrapper">
+          <canvas id="graficoOperadora"></canvas>
+        </div>
+      </div>
+
+      <div class="grafico-card">
+        <h3>Status de Números Utilizados</h3>
+        <div class="grafico-wrapper">
+          <canvas id="graficoUsados"></canvas>
+        </div>
+      </div>
+
+      <div class="grafico-card">
+        <h3>Distribuição por Responsável</h3>
+        <div class="grafico-wrapper">
+          <canvas id="graficoResponsavel"></canvas>
+        </div>
+      </div>
+
+      <div class="grafico-card">
+        <h3>Números por Cidade</h3>
+        <div class="grafico-wrapper">
+          <canvas id="graficoCidade"></canvas>
+        </div>
+      </div>
+
+      <div class="grafico-card">
+        <h3>Status por Operadora</h3>
+        <div class="grafico-wrapper">
+          <canvas id="graficoStatusOperadora"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+    </div>
+  </div>
+
+  <script src="./js/supabase.js"></script>
+  <script src="./js/app-utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/dashboard.js"></script>
+  <script src="./js/dark-mode.js"></script>
+    
+          
+        
+</body>
+
+</html>

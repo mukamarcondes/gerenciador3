@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard Financeiro</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="./js/report-pdf.js"></script>
+  <style>
+    .graficos-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2em;
+      padding: 1.2em 0 0;
+    }
+
+    .grafico-card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 1.5em;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    .grafico-card h3 {
+      margin-top: 0;
+      color: #333;
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
+    .grafico-wrapper {
+      position: relative;
+      height: 300px;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.4em;
+      padding: 0 0 1.4em;
+      margin-bottom: 1.4em;
+    }
+
+    .stat-card {
+      min-height: 114px;
+      padding: 1.3em 1.2em;
+      border-radius: 28px;
+      text-align: center;
+      border: 2px solid #6a347e;
+      background: #f7f4f7;
+      color: #5b2d72;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: none;
+    }
+
+    .stat-value {
+      font-size: 2.35em;
+      font-weight: bold;
+      margin-bottom: 0.2em;
+    }
+
+    .stat-label {
+      font-size: 1.02em;
+      opacity: 1;
+    }
+
+    .financeiro-filtros {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 4px 0 24px;
+      padding: 16px;
+      border-radius: 24px;
+      background: #ece7ee;
+    }
+
+    .financeiro-filtros input,
+    .financeiro-filtros select,
+    .financeiro-filtros button {
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(106, 52, 126, 0.24);
+      padding: 0 14px;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+
+    .financeiro-filtros input,
+    .financeiro-filtros select {
+      background: #f7f4f7;
+      color: #5b2d72;
+    }
+
+    .financeiro-filtros button {
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: #5b2d72;
+      color: #fff;
+    }
+
+    .financeiro-filtros .btn-secundario {
+      background: #ddd6e3;
+      color: #5b2d72;
+    }
+
+    .financeiro-filtros .btn-pdf {
+      background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%);
+      color: #fff;
+    }
+
+    .financeiro-filtros .btn-csv {
+      background: #0f766e;
+      color: #fff;
+    }
+
+    .dashboard-resumo-filtros {
+      margin: -8px 0 18px;
+      color: #6a347e;
+      font-size: 0.95rem;
+      min-height: 22px;
+    }
+
+    .financeiro-alertas {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .financeiro-alerta-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: #f7f4f7;
+      border: 1px solid rgba(106, 52, 126, 0.14);
+      color: #5b2d72;
+    }
+
+    .financeiro-alerta-item strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .financeiro-comparativo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 0 18px;
+    }
+
+    .financeiro-comparativo-card {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #fff7ed 0%, #f8fafc 100%);
+      border: 1px solid rgba(37, 99, 235, 0.12);
+      color: #334155;
+    }
+
+    .financeiro-comparativo-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #1e3a8a;
+    }
+
+    .financeiro-comparativo-card span {
+      display: block;
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .financeiro-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 18px;
+    }
+
+    .financeiro-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #4338ca;
+      font-size: 0.9rem;
+    }
+
+    .financeiro-chip button {
+      border: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      height: auto;
+    }
+
+    .financeiro-loading {
+      display: none;
+      margin: 0 0 18px;
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+
+    .financeiro-loading.show {
+      display: block;
+    }
+
+    @media (max-width: 1100px) {
+      .financeiro-filtros {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+      .grafico-wrapper {
+        height: 260px;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .stats-container,
+      .graficos-container,
+      .financeiro-comparativo {
+        gap: 1rem;
+      }
+
+      .stat-card {
+        min-height: 96px;
+        border-radius: 22px;
+      }
+    }
+  </style>
+</head>
+<body class="layout-documento">
+  <div class="doc-shell">
+    <aside id="sidePanelFinanceiroDashboard" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab2.html'">Numeros Usados</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+      <button class="doc-sidebar-link active" type="button">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button id="btnSairFinanceiroDashboard" class="doc-sidebar-link" type="button">Sair</button>
+        <div id="docUserFinanceiroDashboard" class="doc-user-chip"></div>
+      </div>
+    </aside>
+
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleFinanceiroDashboard" class="doc-menu-btn" type="button" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="doc-title-wrap">
+          <h1>Dashboard Financeiro</h1>
+        </div>
+
+        <div class="doc-logo-wrap theme-logo-wrap">
+          <img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light">
+          <img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark">
+        </div>
+      </header>
+
+      <section class="financeiro-filtros">
+        <select id="filtroCompetenciaFinanceiroDashboard">
+          <option value="">Todas as competencias</option>
+        </select>
+        <select id="filtroStatusFinanceiroDashboard">
+          <option value="">Todos os status</option>
+          <option value="pendente">Pendente</option>
+          <option value="pago">Pago</option>
+          <option value="atrasado">Atrasado</option>
+        </select>
+        <input id="filtroBuscaFinanceiroDashboard" type="text" placeholder="Buscar cliente, empresa ou numero...">
+        <button id="btnLimparFinanceiroDashboard" class="btn-secundario" type="button">Limpar filtros</button>
+        <button id="btnCsvFinanceiroDashboard" class="btn-csv" type="button">Exportar CSV</button>
+        <button id="btnExportarPdfFinanceiroDashboard" class="btn-pdf" type="button">Exportar PDF</button>
+      </section>
+
+      <div id="loadingFinanceiroDashboard" class="financeiro-loading">Carregando indicadores financeiros...</div>
+      <div id="resumoFiltrosFinanceiroDashboard" class="dashboard-resumo-filtros"></div>
+      <div id="chipsFiltrosFinanceiroDashboard" class="financeiro-chip-list"></div>
+      <div id="financeiroCompetenciaMetaDashboard" class="dashboard-resumo-filtros"></div>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-value" id="financeiroReceitaDashboard">R$ 0</div>
+          <div class="stat-label">Receita</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="financeiroCustoDashboard">R$ 0</div>
+          <div class="stat-label">Custo</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="financeiroMargemDashboard">R$ 0</div>
+          <div class="stat-label">Margem</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="financeiroPendentesDashboard">0</div>
+          <div class="stat-label">Pendentes / Atrasados</div>
+        </div>
+      </div>
+
+      <div id="financeiroComparativoDashboard" class="financeiro-comparativo"></div>
+      <div class="graficos-container">
+        <div class="grafico-card">
+          <h3>Receita x Custo por Competencia</h3>
+          <div class="grafico-wrapper">
+            <canvas id="graficoFinanceiroCompetencia"></canvas>
+          </div>
+        </div>
+
+        <div class="grafico-card">
+          <h3>Top Clientes por Receita</h3>
+          <div class="grafico-wrapper">
+            <canvas id="graficoFinanceiroClientes"></canvas>
+          </div>
+        </div>
+
+        <div class="grafico-card">
+          <h3>Custo por Operadora</h3>
+          <div class="grafico-wrapper">
+            <canvas id="graficoFinanceiroOperadora"></canvas>
+          </div>
+        </div>
+
+        <div class="grafico-card">
+          <h3>Status Financeiro</h3>
+          <div class="grafico-wrapper">
+            <canvas id="graficoFinanceiroStatus"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div id="financeiroAlertasDashboard" class="financeiro-alertas"></div>
+    </div>
+  </div>
+
+  <script src="./js/supabase.js"></script>
+  <script src="./js/app-utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/dashboard-financeiro.js"></script>
+  <script src="./js/dark-mode.js"></script>
+</body>
+</html>

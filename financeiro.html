@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Financeiro</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+</head>
+<body class="layout-documento">
+  <div class="doc-shell">
+    <aside id="sidePanelFinanceiro" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab2.html'">Numeros Usados</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+      <button class="doc-sidebar-link active" type="button">Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button id="btnSairFinanceiro" class="doc-sidebar-link" type="button">Sair</button>
+        <div id="docUserFinanceiro" class="doc-user-chip"></div>
+      </div>
+    </aside>
+
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleFinanceiro" class="doc-menu-btn" type="button" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="doc-title-wrap">
+          <h1>Financeiro</h1>
+        </div>
+
+        <div class="doc-logo-wrap theme-logo-wrap">
+          <img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light">
+          <img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark">
+        </div>
+      </header>
+
+      <section class="doc-stats-row">
+        <div class="doc-stat-card">
+          <span id="financeiroReceita">R$ 0,00</span>
+          <p>Receita</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="financeiroCusto">R$ 0,00</span>
+          <p>Custo</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="financeiroMargem">R$ 0,00</span>
+          <p>Margem</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="financeiroPendentes">0</span>
+          <p>Pendentes</p>
+        </div>
+      </section>
+
+      <section class="financeiro-toolbar">
+        <button class="doc-primary-btn" id="btnNovoLancamento" type="button">Novo lancamento</button>
+        <select id="filtroStatusFinanceiro" class="doc-filter-select">
+          <option value="">Todos os status</option>
+          <option value="pendente">Pendente</option>
+          <option value="pago">Pago</option>
+          <option value="atrasado">Atrasado</option>
+        </select>
+        <select id="filtroMesFinanceiro" class="doc-filter-select">
+          <option value="">Todas as competencias</option>
+        </select>
+        <div class="doc-search-wrap">
+          <input id="pesquisarFinanceiro" class="doc-search-input" type="text" placeholder="Buscar cliente, numero, empresa...">
+        </div>
+      </section>
+
+      <section class="financeiro-month-actions">
+        <div class="financeiro-competencia-status">
+          <strong>Status da competencia</strong>
+          <span id="financeiroCompetenciaStatus">Selecione uma competencia para gerenciar o fechamento.</span>
+        </div>
+        <div class="financeiro-competencia-buttons">
+          <button id="btnFecharCompetencia" class="doc-primary-btn" type="button">Fechar competencia</button>
+          <button id="btnReabrirCompetencia" class="doc-secondary-btn" type="button">Reabrir competencia</button>
+          <button id="btnHistoricoCompetencia" class="doc-secondary-btn" type="button">Historico</button>
+        </div>
+      </section>
+
+      <section class="financeiro-alertas-wrap">
+        <div class="financeiro-panel">
+          <div class="financeiro-panel-head">
+            <h2>Alertas Financeiros</h2>
+          </div>
+          <div id="financeiroAlertas" class="financeiro-alertas-list"></div>
+        </div>
+      </section>
+
+      <section class="financeiro-highlight">
+        <div class="financeiro-panel">
+          <div class="financeiro-panel-head">
+            <h2>Resumo Financeiro</h2>
+          </div>
+          <div id="financeiroResumo" class="financeiro-summary-list"></div>
+        </div>
+      </section>
+
+      <main class="doc-content doc-content-table">
+        <div class="doc-table-note">Em tablet, deslize horizontalmente para ver todas as colunas e acoes.</div>
+        <table class="doc-table doc-table-compact">
+          <thead>
+            <tr>
+              <th>Competencia</th>
+              <th>Cliente</th>
+              <th>Empresa</th>
+              <th>Numero</th>
+              <th>Operadora</th>
+              <th>Valor</th>
+              <th>Custo</th>
+              <th>Margem</th>
+              <th>Vencimento</th>
+              <th>Status</th>
+              <th>Editar</th>
+              <th>Observacao</th>
+              <th>Excluir</th>
+            </tr>
+          </thead>
+          <tbody id="financeiroTable"></tbody>
+        </table>
+      </main>
+    </div>
+  </div>
+
+  <div id="modalObservacaoFinanceiro" class="hidden">
+    <div class="modal-content">
+      <button id="btnFecharObservacaoFinanceiro" class="btn-12" type="button">
+        <span>Voltar</span>
+      </button>
+
+      <h2>Observacao do Lancamento</h2>
+
+      <div id="modoVisualizacaoFinanceiro">
+        <div id="observacaoMetaFinanceiro" class="financeiro-observacao-meta"></div>
+        <p id="textoObservacaoFinanceiro"></p>
+      </div>
+
+      <div id="modoEdicaoFinanceiro" class="hidden">
+        <div class="input-container">
+          <textarea id="editarObservacaoFinanceiro" class="input-field"></textarea>
+          <label class="input-label">Observacao</label>
+          <span class="input-highlight"></span>
+        </div>
+      </div>
+
+      <div class="modal-buttons">
+        <button id="btnEditarObservacaoFinanceiro" class="btn-12" type="button">
+          <span>Editar</span>
+        </button>
+        <button id="btnSalvarObservacaoFinanceiro" class="btn-12 hidden" type="button">
+          <span>Salvar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalFinanceiro" class="hidden">
+    <div class="modal-content">
+      <button id="btnFecharFinanceiro" class="btn-12" type="button">
+        <span>Voltar</span>
+      </button>
+
+      <h2 id="tituloModalFinanceiro">Novo Lancamento Financeiro</h2>
+
+      <form id="financeiroForm">
+        <input id="financeiroEditId" type="hidden">
+
+        <div class="input-container half-span">
+          <input id="competenciaFinanceiro" class="input-field" type="month" required>
+          <label class="input-label">Competencia</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container half-span">
+          <select id="clienteFinanceiro" class="input-field" required>
+            <option value="" selected></option>
+          </select>
+          <label class="input-label">Cliente</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container half-span">
+          <input id="empresaFinanceiro" class="input-field" readonly>
+          <label class="input-label">Empresa</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container full-span">
+          <textarea id="numeroFinanceiro" class="input-field"></textarea>
+          <label class="input-label">Numero(s)</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container half-span">
+          <select id="operadoraFinanceiro" class="input-field">
+            <option value="" selected></option>
+            <option value="TIP">TIP</option>
+            <option value="Algar">Algar</option>
+            <option value="Conectel">Conectel</option>
+          </select>
+          <label class="input-label">Operadora</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container half-span">
+          <input id="valorFinanceiro" class="input-field" type="number" step="0.01" min="0" required>
+          <label class="input-label">Valor cobrado</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container half-span">
+          <input id="custoFinanceiro" class="input-field" type="number" step="0.01" min="0" required>
+          <label class="input-label">Custo</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container half-span">
+          <input id="vencimentoFinanceiro" class="input-field" type="date" required>
+          <label class="input-label">Vencimento</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container half-span">
+          <select id="statusFinanceiro" class="input-field" required>
+            <option value="pendente">Pendente</option>
+            <option value="pago">Pago</option>
+            <option value="atrasado">Atrasado</option>
+          </select>
+          <label class="input-label">Status</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container full-span">
+          <textarea id="observacaoFinanceiro" class="input-field"></textarea>
+          <label class="input-label">Observacao</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <button type="submit" class="btn-12 financeiro-submit">
+          <span>Salvar</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modalFechamentoCompetencia" class="hidden">
+    <div class="modal-content">
+      <button id="btnFecharModalCompetencia" class="btn-12" type="button">
+        <span>Voltar</span>
+      </button>
+
+      <h2 id="tituloModalCompetencia">Fechamento de Competencia</h2>
+      <p id="metaModalCompetencia"></p>
+
+      <div class="input-container full-span">
+        <textarea id="observacaoCompetenciaFinanceiro" class="input-field"></textarea>
+        <label class="input-label">Observacao do fechamento</label>
+        <span class="input-highlight"></span>
+      </div>
+
+      <div class="modal-buttons">
+        <button id="btnConfirmarCompetencia" class="btn-12" type="button">
+          <span>Confirmar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalHistoricoCompetencia" class="hidden">
+    <div class="modal-content">
+      <button id="btnFecharHistoricoCompetencia" class="btn-12" type="button">
+        <span>Voltar</span>
+      </button>
+
+      <h2>Historico da Competencia</h2>
+      <div id="historicoCompetenciaMeta" class="financeiro-observacao-meta"></div>
+      <div id="historicoCompetenciaLista" class="financeiro-summary-list"></div>
+    </div>
+  </div>
+
+  <script src="./js/supabase.js"></script>
+  <script src="./js/app-utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/financeiro.js"></script>
+  <script src="./js/dark-mode.js"></script>
+</body>
+</html>

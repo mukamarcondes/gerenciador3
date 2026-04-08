@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Diretoria / Gestao</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="./js/report-pdf.js"></script>
+  <style>
+    .gestao-hero { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; margin-bottom: 22px; }
+    .gestao-panel { border-radius: 28px; background: #f7f4f7; border: 1px solid rgba(106, 52, 126, 0.14); padding: 22px; }
+    .gestao-panel h2, .gestao-panel h3 { margin: 0 0 12px; color: #5b2d72; }
+    .gestao-hero-copy p { margin: 0; color: #6a347e; line-height: 1.6; }
+    .gestao-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .gestao-kpi { border-radius: 24px; padding: 18px 20px; background: #f7f4f7; border: 1px solid rgba(106, 52, 126, 0.14); }
+    .gestao-kpi strong { display: block; margin-bottom: 8px; color: #6a347e; font-size: 0.96rem; }
+    .gestao-kpi span { display: block; color: #5b2d72; font-size: 2rem; font-weight: 700; }
+    .gestao-kpi small { display: block; margin-top: 8px; color: #7a4a90; font-size: 0.9rem; }
+    .gestao-filtros { display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 12px; margin-bottom: 22px; padding: 16px; border-radius: 24px; background: #ece7ee; }
+    .gestao-filtros input, .gestao-filtros select, .gestao-filtros button { height: 44px; border-radius: 999px; border: 1px solid rgba(106, 52, 126, 0.24); padding: 0 14px; font-size: 0.95rem; box-sizing: border-box; }
+    .gestao-filtros input, .gestao-filtros select { background: #f7f4f7; color: #5b2d72; }
+    .gestao-filtros button { border: none; cursor: pointer; font-weight: 600; background: #5b2d72; color: #fff; }
+    .gestao-filtros .btn-secundario { background: #ddd6e3; color: #5b2d72; }
+    .gestao-filtros .btn-pdf { background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%); color: #fff; }
+    .gestao-resumo-filtros { margin: -6px 0 18px; color: #6a347e; min-height: 22px; }
+    .gestao-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 18px; }
+    .gestao-chart { position: relative; height: 320px; }
+    .gestao-lista, .gestao-alertas { display: grid; gap: 12px; }
+    .gestao-item, .gestao-alerta { padding: 14px 16px; border-radius: 18px; background: #ece7ee; color: #5b2d72; }
+    .gestao-alerta { background: #f7f4f7; border: 1px solid rgba(106, 52, 126, 0.14); }
+    .gestao-item { display: flex; justify-content: space-between; gap: 12px; }
+    .gestao-item strong, .gestao-alerta strong { display: block; margin-bottom: 6px; }
+    .gestao-comparativo { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .gestao-comparativo-card { border-radius: 22px; padding: 16px 18px; background: linear-gradient(135deg, #fff7ed 0%, #f7f4f7 100%); border: 1px solid rgba(106, 52, 126, 0.14); color: #5b2d72; }
+    .gestao-comparativo-card strong { display: block; margin-bottom: 6px; color: #6a347e; }
+    .gestao-comparativo-card span { display: block; line-height: 1.5; font-size: 0.94rem; }
+    @media (max-width: 1100px) { .gestao-hero, .gestao-grid { grid-template-columns: 1fr; } .gestao-filtros { grid-template-columns: repeat(2, minmax(180px, 1fr)); } }
+  </style>
+</head>
+<body class="layout-documento">
+  <div class="doc-shell">
+    <aside id="sidePanelDiretoria" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab2.html'">Numeros Usados</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link active" type="button">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button id="btnSairDiretoria" class="doc-sidebar-link" type="button">Sair</button>
+        <div id="docUserDiretoria" class="doc-user-chip"></div>
+      </div>
+    </aside>
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleDiretoria" class="doc-menu-btn" type="button" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+        <div class="doc-title-wrap"><h1>Diretoria / Gestao</h1></div>
+        <div class="doc-logo-wrap theme-logo-wrap"><img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light"><img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark"></div>
+      </header>
+      <section class="gestao-hero">
+        <div class="gestao-panel gestao-hero-copy"><h2>Visao Executiva</h2><p>Este painel consolida o resultado financeiro do recorte atual, destacando margem, inadimplencia, concentracao de receita e desempenho dos principais clientes.</p></div>
+        <div class="gestao-panel"><h3>Competencia em foco</h3><div id="gestaoCompetenciaDestaque" class="gestao-lista"></div><div id="gestaoFechamentoMeta" class="gestao-resumo-filtros"></div></div>
+      </section>
+      <section class="gestao-filtros">
+        <select id="filtroCompetenciaDiretoria"><option value="">Todas as competencias</option></select>
+        <select id="filtroStatusDiretoria"><option value="">Todos os status</option><option value="pendente">Pendente</option><option value="pago">Pago</option><option value="atrasado">Atrasado</option></select>
+        <input id="filtroBuscaDiretoria" type="text" placeholder="Buscar cliente, empresa ou numero...">
+        <button id="btnLimparDiretoria" class="btn-secundario" type="button">Limpar filtros</button>
+        <button id="btnExportarPdfDiretoria" class="btn-pdf" type="button">Exportar PDF</button>
+      </section>
+      <div id="gestaoResumoFiltros" class="gestao-resumo-filtros"></div>
+      <section class="gestao-kpis">
+        <div class="gestao-kpi"><strong>Receita Total</strong><span id="gestaoReceita">R$ 0</span><small id="gestaoReceitaDelta">Sem comparativo</small></div>
+        <div class="gestao-kpi"><strong>Margem Total</strong><span id="gestaoMargem">R$ 0</span><small id="gestaoMargemPercentual">Margem 0%</small></div>
+        <div class="gestao-kpi"><strong>Inadimplencia</strong><span id="gestaoInadimplencia">0%</span><small id="gestaoPendentesTexto">0 pendencias</small></div>
+        <div class="gestao-kpi"><strong>Ticket Medio</strong><span id="gestaoTicketMedio">R$ 0</span><small id="gestaoClientesAtivos">0 clientes no recorte</small></div>
+        <div class="gestao-kpi"><strong>Cliente Lider</strong><span id="gestaoClienteLider">-</span><small id="gestaoClienteLiderShare">Participacao 0%</small></div>
+        <div class="gestao-kpi"><strong>Margem Negativa</strong><span id="gestaoMargemNegativa">0</span><small id="gestaoMargemNegativaTexto">Sem ocorrencias</small></div>
+      </section>
+      <section id="gestaoComparativo" class="gestao-comparativo"></section>
+      <section class="gestao-grid">
+        <div class="gestao-panel"><h3>Evolucao Mensal</h3><div class="gestao-chart"><canvas id="graficoGestaoMensal"></canvas></div></div>
+        <div class="gestao-panel"><h3>Top Clientes por Margem</h3><div class="gestao-chart"><canvas id="graficoGestaoClientes"></canvas></div></div>
+        <div class="gestao-panel"><h3>Status Financeiro</h3><div class="gestao-chart"><canvas id="graficoGestaoStatus"></canvas></div></div>
+        <div class="gestao-panel"><h3>Resumo Executivo</h3><div id="gestaoResumoExecutivo" class="gestao-lista"></div></div>
+      </section>
+      <section id="gestaoAlertas" class="gestao-alertas"></section>
+    </div>
+  </div>
+  <script src="./js/supabase.js"></script>
+  <script src="./js/app-utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/diretoria.js"></script>
+  <script src="./js/dark-mode.js"></script>
+</body>
+</html>
