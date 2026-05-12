@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Auditoria</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+  <style>
+    .auditoria-hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; margin-bottom: 22px; }
+    .auditoria-panel { border-radius: 28px; background: #f7f4f7; border: 1px solid rgba(106, 52, 126, 0.14); padding: 22px; }
+    .auditoria-panel h2, .auditoria-panel h3 { margin: 0 0 12px; color: #5b2d72; }
+    .auditoria-panel p { margin: 0; color: #6a347e; line-height: 1.6; }
+    .auditoria-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .auditoria-kpi { border-radius: 24px; padding: 18px 20px; background: #f7f4f7; border: 1px solid rgba(106, 52, 126, 0.14); }
+    .auditoria-kpi strong { display: block; margin-bottom: 8px; color: #6a347e; font-size: 0.96rem; }
+    .auditoria-kpi span { display: block; color: #5b2d72; font-size: 2rem; font-weight: 700; }
+    .auditoria-kpi small { display: block; margin-top: 8px; color: #7a4a90; font-size: 0.9rem; }
+    .auditoria-filtros { display: grid; grid-template-columns: repeat(6, minmax(140px, 1fr)); gap: 12px; margin-bottom: 18px; padding: 16px; border-radius: 24px; background: #ece7ee; }
+    .auditoria-filtros input, .auditoria-filtros select, .auditoria-filtros button { height: 44px; border-radius: 999px; border: 1px solid rgba(106, 52, 126, 0.24); padding: 0 14px; font-size: 0.95rem; box-sizing: border-box; }
+    .auditoria-filtros input, .auditoria-filtros select { background: #f7f4f7; color: #5b2d72; }
+    .auditoria-filtros button { border: none; cursor: pointer; font-weight: 600; background: #5b2d72; color: #fff; }
+    .auditoria-filtros .secundario { background: #ddd6e3; color: #5b2d72; }
+    .auditoria-filtros #auditoriaExportar { background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%); color: #fff; }
+    .auditoria-resumo { margin: -4px 0 18px; color: #6a347e; min-height: 22px; }
+    .auditoria-destaques { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 22px; }
+    .auditoria-destaque-lista { display: grid; gap: 10px; }
+    .auditoria-destaque-item { padding: 14px 16px; border-radius: 16px; background: #ece7ee; border: 1px solid rgba(106, 52, 126, 0.1); color: #5b2d72; }
+    .auditoria-destaque-item strong { display: block; margin-bottom: 6px; color: #5b2d72; }
+    .auditoria-destaque-item span { display: block; color: #6a347e; line-height: 1.5; }
+    .auditoria-lista { display: grid; gap: 12px; }
+    .auditoria-item { padding: 16px 18px; border-radius: 18px; background: #ece7ee; color: #5b2d72; border: 1px solid rgba(106, 52, 126, 0.1); }
+    .auditoria-item-topo { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    .auditoria-item strong { color: #5b2d72; }
+    .auditoria-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .auditoria-chip { display: inline-flex; align-items: center; padding: 7px 11px; border-radius: 999px; background: #f7f4f7; border: 1px solid rgba(106, 52, 126, 0.14); color: #6a347e; font-size: 0.84rem; font-weight: 700; }
+    .auditoria-detalhes { display: grid; gap: 8px; }
+    .auditoria-detalhe { padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.5); color: #5b2d72; }
+    .auditoria-empty { padding: 18px; border-radius: 18px; background: #ece7ee; color: #7a4a90; text-align: center; }
+    @media (max-width: 1100px) { .auditoria-hero, .auditoria-destaques { grid-template-columns: 1fr; } .auditoria-filtros { grid-template-columns: repeat(2, minmax(180px, 1fr)); } }
+    @media (max-width: 900px) { .auditoria-filtros { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="layout-documento">
+  <div class="doc-shell">
+    <aside id="sidePanelAuditoria" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab2.html'">Numeros Usados</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link active" type="button">Auditoria</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button id="btnSairAuditoria" class="doc-sidebar-link" type="button">Sair</button>
+        <div id="docUserAuditoria" class="doc-user-chip"></div>
+      </div>
+    </aside>
+
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleAuditoria" class="doc-menu-btn" type="button" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+        <div class="doc-title-wrap"><h1>Auditoria</h1></div>
+        <div class="doc-logo-wrap theme-logo-wrap"><img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light"><img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark"></div>
+      </header>
+
+      <section class="auditoria-hero">
+        <div class="auditoria-panel">
+          <h2>Auditoria Dedicada</h2>
+          <p>Esta area consolida os eventos do sistema para leitura gerencial. Filtre por usuario, perfil, modulo, acao e periodo para descobrir quem alterou o que e quando.</p>
+        </div>
+        <div class="auditoria-panel">
+          <h3>Leitura recomendada</h3>
+          <p>Use esta tela para investigar mudancas operacionais, conferir edicoes do financeiro, revisar alteracoes de usuarios e acompanhar logins relevantes da equipe.</p>
+        </div>
+      </section>
+
+      <section class="auditoria-kpis">
+        <div class="auditoria-kpi"><strong>Eventos no recorte</strong><span id="auditoriaTotal">0</span><small id="auditoriaUltimoEvento">Sem eventos</small></div>
+        <div class="auditoria-kpi"><strong>Usuarios no recorte</strong><span id="auditoriaUsuarios">0</span><small id="auditoriaPerfis">Sem perfis</small></div>
+        <div class="auditoria-kpi"><strong>Acoes distintas</strong><span id="auditoriaAcoes">0</span><small id="auditoriaAreas">Sem areas</small></div>
+        <div class="auditoria-kpi"><strong>Acoes criticas</strong><span id="auditoriaCriticas">0</span><small id="auditoriaCriticasTexto">Nenhuma acao critica no recorte</small></div>
+      </section>
+
+      <section class="auditoria-filtros">
+        <input id="auditoriaBusca" type="text" placeholder="Buscar por usuario, acao, modulo ou detalhe...">
+        <select id="auditoriaUsuario"><option value="">Todos os usuarios</option></select>
+        <select id="auditoriaPerfil"><option value="">Todos os perfis</option></select>
+        <select id="auditoriaArea"><option value="">Todas as areas</option></select>
+        <select id="auditoriaAcao"><option value="">Todas as acoes</option></select>
+        <select id="auditoriaPeriodo">
+          <option value="">Todo o periodo</option>
+          <option value="1">Hoje</option>
+          <option value="7">Ultimos 7 dias</option>
+          <option value="30">Ultimos 30 dias</option>
+          <option value="90">Ultimos 90 dias</option>
+        </select>
+        <button id="auditoriaLimpar" class="secundario" type="button">Limpar filtros</button>
+        <button id="auditoriaExportar" type="button">Exportar CSV</button>
+      </section>
+
+      <div id="auditoriaResumo" class="auditoria-resumo"></div>
+
+      <section class="auditoria-destaques">
+        <div class="auditoria-panel">
+          <h3>Mudancas Sensiveis</h3>
+          <div id="auditoriaMudancasSensiveis" class="auditoria-destaque-lista"></div>
+        </div>
+        <div class="auditoria-panel">
+          <h3>Acessos e Fechamentos</h3>
+          <div id="auditoriaAcessosFechamentos" class="auditoria-destaque-lista"></div>
+        </div>
+      </section>
+
+      <section id="auditoriaLista" class="auditoria-lista"></section>
+    </div>
+  </div>
+
+  <script src="./js/supabase.js"></script>
+  <script src="./js/app-utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/auditoria.js"></script>
+  <script src="./js/dark-mode.js"></script>
+</body>
+</html>

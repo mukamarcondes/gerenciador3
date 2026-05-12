@@ -1,0 +1,347 @@
+@font-face {
+	font-family: "Inter";
+	src: url("./fonts/Inter-Variable.ttf") format("truetype");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("./fonts/Montserrat-Variable.ttf") format("truetype");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Rounded Elegance";
+	src: url("./fonts/Rounded-Elegance-Regular.otf") format("opentype");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+:root {
+	--font-sans: "Inter", Arial, sans-serif;
+	--font-heading: "Montserrat", "Inter", Arial, sans-serif;
+	--font-accent: "Rounded Elegance", "Montserrat", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: var(--font-sans);
+	background: linear-gradient(135deg, #f0f4f8 0%, #e8f0f7 50%, #f0ecf8 100%);
+	background-attachment: fixed;
+	color: #2d3748;
+	min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+	font-family: var(--font-sans);
+}
+
+body::before {
+  content: '';
+  display: block;
+  position: fixed;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(100, 200, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(150, 100, 255, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.forms-section, .forms, .form-wrapper, .form {
+  position: relative;
+  z-index: 2;
+}
+
+.forms-section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	padding: 1rem;
+}
+
+.forms {
+	display: flex;
+	align-items: flex-start;
+	margin-top: 20px;
+	width: 100%;
+	justify-content: center;
+}
+
+@media (max-width: 768px) {
+	.forms { flex-direction: column; margin-top: 10px; }
+	.forms-wrapper { width: 100%; }
+	.form { width: 100%; margin-top: 16px; }
+}
+
+.form {
+	overflow: hidden;
+	min-width: 300px;
+	max-width: 420px;
+	margin-top: 40px;
+	padding: 40px 32px;
+	border-radius: 24px;
+	transform-origin: top;
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(10px);
+	border: 2px solid rgba(255, 255, 255, 0.8);
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.05);
+	transition: all 0.3s ease;
+}
+
+.form:hover {
+	box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
+	transform: translateY(-4px);
+}
+
+.form fieldset {
+	position: relative;
+	opacity: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	transition: all .3s ease-out;
+}
+
+.form-login fieldset {
+	transform: translateX(-50%);
+}
+
+.form-signup fieldset {
+	transform: translateX(50%);
+}
+
+.form-wrapper.is-active fieldset {
+	opacity: 1;
+	transform: translateX(0);
+	transition: opacity .4s ease-in, transform .35s ease-in;
+	padding: 0;
+}
+
+.logoo {
+	display: block;
+	width: 80px;
+	height: 80px;
+	margin: 0 auto 24px;
+	object-fit: contain;
+	filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+}
+
+.radio {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: stretch;
+	gap: 12px;
+	width: 100%;
+	margin-bottom: 24px;
+	padding: 12px;
+	background: linear-gradient(135deg, rgba(100, 200, 255, 0.05), rgba(150, 100, 255, 0.05));
+	border-radius: 14px;
+	border: 1px solid rgba(100, 200, 255, 0.15);
+}
+
+.radio label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+	font-weight: 500;
+	color: #4a5568;
+	padding: 10px 12px;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.6);
+	border: 1.5px solid rgba(100, 200, 255, 0.3);
+	cursor: pointer;
+	transition: all 0.3s ease;
+	text-align: center;
+	min-height: 48px;
+}
+
+.radio label:hover {
+	background: rgba(100, 200, 255, 0.1);
+	border-color: rgba(100, 200, 255, 0.6);
+	transform: translateY(-1px);
+	box-shadow: 0 8px 18px rgba(100, 149, 255, 0.16);
+}
+
+.radio input {
+	margin-right: 8px;
+	cursor: pointer;
+	accent-color: #6c9dff;
+	flex: 0 0 auto;
+}
+
+.radio label:has(input:checked) {
+	background: linear-gradient(135deg, #64c8ff 0%, #9664ff 100%);
+	color: white;
+	border-color: transparent;
+	box-shadow: 0 12px 24px rgba(108, 157, 255, 0.26);
+	transform: translateY(-1px) scale(1.01);
+	font-weight: 700;
+}
+
+.radio label:has(input:checked) input {
+	accent-color: #ffffff;
+}
+
+.form legend {
+	position: absolute;
+	overflow: hidden;
+	width: 1px;
+	height: 1px;
+	clip: rect(0 0 0 0);
+}
+
+.input-block {
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.input-block label {
+	font-size: 13px;
+	font-weight: 600;
+	color: #4a5568;
+	margin-bottom: 8px;
+	display: inline-block;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.input-block input {
+	display: block;
+	width: 100%;
+	margin-top: 8px;
+	padding: 12px 16px;
+	font-size: 15px;
+	line-height: 20px;
+	color: #2d3748;
+	background: rgba(255, 255, 255, 0.8);
+	border: 2px solid rgba(100, 200, 255, 0.3);
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+	transition: all 0.3s ease;
+}
+
+.input-block input::placeholder {
+	color: #a0aec0;
+}
+
+.input-block input:focus {
+	outline: none;
+	border-color: #6c9dff;
+	box-shadow: 0 8px 24px rgba(100, 200, 255, 0.25);
+	background: rgba(255, 255, 255, 0.95);
+}
+
+.button {
+	margin-top: 28px;
+	width: 100%;
+}
+
+.form [type='submit'] {
+	opacity: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 52px;
+	padding: 14px 18px;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1;
+	border-radius: 14px;
+	border: none;
+	transition: all .3s ease-out;
+	color: white;
+	background: linear-gradient(135deg, #64c8ff 0%, #9664ff 100%);
+	box-shadow: 0 14px 30px rgba(29, 31, 32, 0.28);
+	cursor: pointer;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+.form [type='submit']:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 18px 34px rgba(29, 31, 32, 0.34);
+}
+
+.form [type='submit']:active {
+	transform: translateY(-1px);
+}
+
+.form-wrapper.is-active .form [type='submit'] {
+	opacity: 1;
+	transform: translateX(0);
+	transition: all .4s ease-in;
+}
+
+.btn-login {
+	color: #fbfdff;
+	background: linear-gradient(135deg, #64c8ff, #9664ff);
+	transform: translateX(0);
+}
+
+.btn-signup {
+	color: #fbfdff;
+	background: linear-gradient(135deg, #64c8ff, #9664ff);
+	transform: translateX(30%);
+}
+
+.cadastro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+
+.logoo {
+	display: flex;
+	width: 70%;
+	justify-content: center;
+	align-items: center;
+}
+
+.forms {
+	width: 30%;
+}
+
+@media (max-width: 980px) {
+	.forms {
+		width: min(100%, 420px);
+	}
+}
+
+@media (max-width: 520px) {
+	.radio {
+		grid-template-columns: 1fr;
+	}
+
+	.form {
+		padding: 28px 20px;
+	}
+}
+
+fieldset {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	width: 100%;
+}

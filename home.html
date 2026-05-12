@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Home</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+</head>
+<body class="layout-documento">
+  <div class="doc-shell">
+    <aside id="sidePanelHome" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link active" type="button">Home</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab2.html'">Numeros Usados</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='clientes.html'">Clientes</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button id="btnSairHome" class="doc-sidebar-link" type="button">Sair</button>
+        <div id="docUserHome" class="doc-user-chip"></div>
+      </div>
+    </aside>
+
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleHome" class="doc-menu-btn" type="button" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="doc-title-wrap">
+          <h1>Home</h1>
+        </div>
+
+        <div class="doc-logo-wrap theme-logo-wrap">
+          <img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light">
+          <img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark">
+        </div>
+      </header>
+
+      <section class="home-nav-grid">
+        <button class="home-nav-card" type="button" onclick="window.location.href='tab.html'">
+          <strong>Numeros Disponiveis</strong>
+          <span>Cadastre, filtre e acompanhe os numeros livres.</span>
+        </button>
+        <button class="home-nav-card" type="button" onclick="window.location.href='tab2.html'">
+          <strong>Numeros Usados</strong>
+          <span>Gerencie responsaveis, empresa, status e historico.</span>
+        </button>
+        <button class="home-nav-card" type="button" onclick="window.location.href='dashboards.html'">
+          <strong>Dashboard</strong>
+          <span>Analise graficos, filtros e relatorios do sistema.</span>
+        </button>
+        <button class="home-nav-card" type="button" onclick="window.location.href='dashboard-financeiro.html'">
+          <strong>Dashboard Financeiro</strong>
+          <span>Acompanhe receita, custo, margem, alertas e top clientes.</span>
+        </button>
+        <button class="home-nav-card" type="button" onclick="window.location.href='diretoria.html'">
+          <strong>Diretoria / Gestao</strong>
+          <span>Veja KPIs executivos, comparativos mensais e alertas de concentracao.</span>
+        </button>
+        <button class="home-nav-card" type="button" onclick="window.location.href='auditoria.html'">
+          <strong>Auditoria</strong>
+          <span>Investigue eventos, mudancas por usuario e historico completo do sistema.</span>
+        </button>
+        <button class="home-nav-card" type="button" onclick="window.location.href='financeiro.html'">
+          <strong>Financeiro</strong>
+          <span>Controle valores, custos, margem e vencimentos por cliente.</span>
+        </button>
+        <button class="home-nav-card" type="button" onclick="window.location.href='clientes.html'">
+          <strong>Clientes</strong>
+          <span>Cadastre empresas, contatos e a base usada pelo financeiro.</span>
+        </button>
+        <button class="home-nav-card" type="button" onclick="window.location.href='usuarios.html'">
+          <strong>Usuarios</strong>
+          <span>Administre perfis, bloqueios e limites de acesso por area.</span>
+        </button>
+      </section>
+
+      <section class="home-panels home-panels-executive">
+        <div class="home-panel">
+          <div class="home-panel-head">
+            <h2>Home Executiva</h2>
+          </div>
+          <div id="homeExecutivoResumo" class="home-summary-list"></div>
+        </div>
+
+        <div class="home-panel">
+          <div class="home-panel-head">
+            <h2>Alertas Criticos</h2>
+          </div>
+          <div id="homeAlertasCriticos" class="home-activity-list"></div>
+        </div>
+      </section>
+
+      <section class="home-summary-grid">
+        <div class="doc-stat-card">
+          <span id="homeCountLivre">0</span>
+          <p>Livres</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="homeCountReservado">0</span>
+          <p>Reservados</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="homeCountOcupado">0</span>
+          <p>Ocupados</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="homeCountUsados">0</span>
+          <p>Usados</p>
+        </div>
+      </section>
+
+      <section class="home-panels home-panels-auditoria">
+        <div class="home-panel">
+          <div class="home-panel-head">
+            <h2>Auditoria Geral</h2>
+          </div>
+          <div class="financeiro-toolbar">
+            <select id="homeAuditFiltroArea" class="doc-filter-select">
+              <option value="">Todas as areas</option>
+              <option value="empresas">Numeros Disponiveis</option>
+              <option value="usados">Numeros Usados</option>
+              <option value="financeiro">Financeiro</option>
+              <option value="financeiro_competencias">Fechamento de Competencia</option>
+              <option value="cliente">Clientes</option>
+              <option value="auth">Acessos</option>
+            </select>
+          </div>
+          <div id="homeAuditoriaResumo" class="home-summary-list"></div>
+          <div id="homeAuditoriaLista" class="home-activity-list"></div>
+        </div>
+
+        <div class="home-panel-stack">
+          <div class="home-panel">
+            <div class="home-panel-head">
+              <h2>Resumo Rapido</h2>
+            </div>
+            <div id="homeResumoRapido" class="home-summary-list"></div>
+          </div>
+
+          <div class="home-panel">
+            <div class="home-panel-head">
+              <h2>Atividade Recente</h2>
+            </div>
+            <div id="homeRecentes" class="home-activity-list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="./js/supabase.js"></script>
+  <script src="./js/app-utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/home.js"></script>
+  <script src="./js/dark-mode.js"></script>
+</body>
+</html>

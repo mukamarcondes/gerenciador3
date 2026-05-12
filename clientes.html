@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Clientes</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dark-mode.css">
+</head>
+<body class="layout-documento">
+  <div class="doc-shell">
+    <aside id="sidePanelClientes" class="doc-sidebar hidden">
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='home.html'">Home</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab.html'">Numeros Disponiveis</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='tab2.html'">Numeros Usados</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboards.html'">Dashboard</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='dashboard-financeiro.html'">Dashboard Financeiro</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='diretoria.html'">Diretoria / Gestao</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='auditoria.html'">Auditoria</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='financeiro.html'">Financeiro</button>
+      <button class="doc-sidebar-link active" type="button">Clientes</button>
+      <button class="doc-sidebar-link" type="button" onclick="window.location.href='usuarios.html'">Usuarios</button>
+      <div class="doc-sidebar-footer">
+        <button id="btnSairClientes" class="doc-sidebar-link" type="button">Sair</button>
+        <div id="docUserClientes" class="doc-user-chip"></div>
+      </div>
+    </aside>
+
+    <div class="doc-main">
+      <header class="doc-topbar">
+        <button id="menuToggleClientes" class="doc-menu-btn" type="button" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="doc-title-wrap">
+          <h1>Clientes</h1>
+        </div>
+
+        <div class="doc-logo-wrap theme-logo-wrap">
+          <img src="./img/1.png" alt="Conectel" class="theme-logo theme-logo-light">
+          <img src="./img/2.png" alt="Conectel" class="theme-logo theme-logo-dark">
+        </div>
+      </header>
+
+      <section class="doc-stats-row">
+        <div class="doc-stat-card">
+          <span id="clientesTotal">0</span>
+          <p>Total</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="clientesAtivos">0</span>
+          <p>Ativos</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="clientesInativos">0</span>
+          <p>Inativos</p>
+        </div>
+        <div class="doc-stat-card">
+          <span id="clientesCidades">0</span>
+          <p>Cidades</p>
+        </div>
+      </section>
+
+      <section class="financeiro-toolbar">
+        <button class="doc-primary-btn" id="btnNovoCliente" type="button">Novo cliente</button>
+        <button class="doc-primary-btn" id="btnImportarClientes" type="button">Importar clientes</button>
+        <input id="arquivoImportacaoClientes" type="file" accept=".csv,text/csv" hidden>
+        <select id="filtroStatusClientes" class="doc-filter-select">
+          <option value="">Todos os status</option>
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+        </select>
+        <div class="doc-search-wrap">
+          <input id="pesquisarClientes" class="doc-search-input" type="text" placeholder="Buscar nome, documento, contato, cidade...">
+        </div>
+      </section>
+
+      <section class="financeiro-highlight">
+        <div class="financeiro-panel">
+          <div class="financeiro-panel-head">
+            <h2>Resumo de Clientes</h2>
+          </div>
+          <div id="clientesResumo" class="financeiro-summary-list"></div>
+        </div>
+      </section>
+
+      <main class="doc-content doc-content-table">
+        <div class="doc-table-note">Em tablet, deslize horizontalmente para ver todas as colunas e acoes.</div>
+        <table class="doc-table doc-table-compact">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Razao Social</th>
+              <th>Documento</th>
+              <th>Contato</th>
+              <th>Cidade</th>
+              <th>Status</th>
+              <th>Observacao</th>
+              <th>Vinculos</th>
+              <th>Historico</th>
+              <th>Editar</th>
+              <th>Excluir</th>
+            </tr>
+          </thead>
+          <tbody id="clientesTable"></tbody>
+        </table>
+      </main>
+    </div>
+  </div>
+
+  <div id="modalCliente" class="doc-modal hidden">
+    <div class="doc-modal-card doc-modal-card-medium">
+      <button id="btnFecharCliente" class="btn-12" type="button">
+        <span>Voltar</span>
+      </button>
+
+      <h2 id="tituloModalCliente" class="doc-modal-title">Novo Cliente</h2>
+
+      <form id="clienteForm" class="doc-form-grid doc-form-grid-two">
+        <div class="input-container">
+          <input id="clienteNome" class="input-field" required>
+          <label class="input-label">Nome</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container">
+          <input id="clienteRazaoSocial" class="input-field">
+          <label class="input-label">Razao social</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container">
+          <input id="clienteDocumento" class="input-field">
+          <label class="input-label">Documento</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container">
+          <input id="clienteContato" class="input-field">
+          <label class="input-label">Contato</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container">
+          <input id="clienteEmail" class="input-field" type="email">
+          <label class="input-label">Email</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container">
+          <input id="clienteTelefone" class="input-field">
+          <label class="input-label">Telefone</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container">
+          <input id="clienteCidade" class="input-field">
+          <label class="input-label">Cidade</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container">
+          <input id="clienteUf" class="input-field" maxlength="2">
+          <label class="input-label">UF</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container">
+          <select id="clienteStatus" class="input-field" required>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+          </select>
+          <label class="input-label">Status</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-container doc-form-grid-full">
+          <textarea id="clienteObservacao" class="input-field"></textarea>
+          <label class="input-label">Observacao</label>
+          <span class="input-highlight"></span>
+        </div>
+
+        <button type="submit" class="btn-12 doc-form-grid-full">
+          <span>Salvar</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modalObservacaoCliente" class="doc-modal hidden">
+    <div class="doc-modal-card">
+      <button id="btnFecharObservacaoCliente" class="btn-12" type="button">
+        <span>Voltar</span>
+      </button>
+
+      <h2 class="doc-modal-title">Observacao do Cliente</h2>
+
+      <div id="clienteObservacaoMeta" class="financeiro-observacao-meta"></div>
+      <p id="clienteObservacaoTexto" class="doc-modal-copy"></p>
+    </div>
+  </div>
+
+  <div id="modalVinculosCliente" class="doc-modal hidden">
+    <div class="doc-modal-card doc-modal-card-medium">
+      <button id="btnFecharVinculosCliente" class="btn-12" type="button">
+        <span>Voltar</span>
+      </button>
+
+      <h2 class="doc-modal-title">Vinculos do Cliente</h2>
+
+      <div id="clienteVinculosMeta" class="financeiro-observacao-meta"></div>
+      <div id="clienteVinculosResumo" class="financeiro-summary-list"></div>
+      <div id="clienteVinculosLancamentos" class="home-activity-list"></div>
+    </div>
+  </div>
+
+  <div id="modalHistoricoCliente" class="doc-modal hidden">
+    <div class="doc-modal-card doc-modal-card-medium">
+      <button id="btnFecharHistoricoCliente" class="btn-12" type="button">
+        <span>Voltar</span>
+      </button>
+
+      <h2 class="doc-modal-title">Historico do Cliente</h2>
+
+      <div id="clienteHistoricoMeta" class="financeiro-observacao-meta"></div>
+      <div id="clienteHistoricoLista" class="history-list"></div>
+    </div>
+  </div>
+
+  <script src="./js/supabase.js"></script>
+  <script src="./js/app-utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/clientes.js"></script>
+  <script src="./js/dark-mode.js"></script>
+</body>
+</html>
